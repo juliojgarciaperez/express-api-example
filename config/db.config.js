@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/three-points";
+const MongoMemoryServer = require('mongodb-memory-server').MongoMemoryServer;
 
-mongoose
-  .connect(MONGODB_URI, {
-    useCreateIndex: true,
-    useUnifiedTopology: true,
+MongoMemoryServer.create()
+  .then((mongoServer) => mongoose.connect(mongoServer.getUri(), {
     useNewUrlParser: true,
-  })
+    dbName: "tweets",
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  }))
   .then(() =>
-    console.info(`Successfully connected to the database ${MONGODB_URI}`)
+    console.info(`Successfully connected to the database`)
   )
   .catch((error) => {
     console.error("An error occurred trying to connect to the database", error);
